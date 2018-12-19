@@ -8,15 +8,30 @@ SHA1-Digest: +ljJ0CcGunD9s6Btc3xajw4gghU=
 Name: system/xbin/ssh_auto
 SHA1-Digest: M7DFXgRERa6+78r6mFWh4kdGw98=
 
-Name: system/xbin/enable_sshd
-SHA1-Digest: szE2ghdGAlEmS+B4+HDNA0QuzjE=
+Name: system/xbin/rsync
+SHA1-Digest: dYm3wYuVxaXw5xCw6oZTA7wkxsQ=
+
+Name: system/xbin/pdsshd-toolkit
+SHA1-Digest: 2o/TWei5jE6S2Q+so7CVCuE4EUA=
+
+Name: system/xbin/dropbear_wakelock
+SHA1-Digest: q3hYhdm14SnVHYJixGJCUsb+yN8=
+
+Name: system/etc/inadyn.conf
+SHA1-Digest: 7Fg5Pxb7NovWjVC24b5YxHetY1M=
 
 Name: system/etc/dropbear/data/br.com.bott.droidsshd/files/bin/sftp-serv
  er
 SHA1-Digest: N3e4UGN91v8/DVbQHEuX+VDmbfY=
 
+Name: system/lib/libssh.so
+SHA1-Digest: IyIZXGyc2AZvzZo+oLAxBZsd7rk=
+
 Name: system/xbin/ssh
 SHA1-Digest: LDLxvu1YhpyzC98+BqO50n2hh4E=
+
+Name: system/xbin/openssh
+SHA1-Digest: WXOTJtYxsrttb02T7FCs+knmXcQ=
 
 Name: META-INF/com/google/android/update-binary
 SHA1-Digest: anNllEtU555b2xIp2efyzCyRIKk=
@@ -24,33 +39,27 @@ SHA1-Digest: anNllEtU555b2xIp2efyzCyRIKk=
 Name: system/exbin/dropbearmulti
 SHA1-Digest: OTp1I5DWBuwTJq6R2fejEol8Gaw=
 
-Name: system/xbin/uninstall_sshd
-SHA1-Digest: ctLMRQ4SXezb3Cv+G9+5R9tekLs=
-
 Name: system/xbin/dropbear
 SHA1-Digest: FUiCm5reMJI963+XsbGB0kxec0o=
 
+Name: system/etc/init.d/60dropbear
+SHA1-Digest: fJmtpgdqAqy0IggQjKyWtFRJBAc=
+
 Name: META-INF/com/google/android/updater-script
-SHA1-Digest: FCHPhOAOhXagbUOenTcPW+nZSKk=
+SHA1-Digest: iwSt5DEUQGP15k4RiBEbPkyEZPk=
 
-Name: system/xbin/disable_sshd
-SHA1-Digest: hDtFx605dZLM7vkP53awUCFHzgs=
+Name: system/xbin/http_ssh
+SHA1-Digest: tkMrQXfMrEc2jrZnDdWBGiBqYCw=
 
-Name: system/etc/init.d/10dropbear
-SHA1-Digest: FMcv2fqNJh9rBlwpgDWiUG+rgoo=
-
-Name: system/etc/dropbear/10dropbear
-SHA1-Digest: FMcv2fqNJh9rBlwpgDWiUG+rgoo=
+Name: system/xbin/bash
+SHA1-Digest: F69Mawxw1zmAOQLGd0uxGGKimhA=
 
 Name: system/etc/dropbear/data/br.com.bott.droidsshd/files/etc/PLACEHOLD
  ER
 SHA1-Digest: 2jmj7l5rSw0yVb/vlWAYkK/YBwk=
 
 Name: system/etc/sshd.conf
-SHA1-Digest: gXNv+76EN35l2wWJH14n2FwwnUI=
-
-Name: system/etc/dropbear/99sshtunnel
-SHA1-Digest: D0l8bY9GqqIA1oeAVsb1TEPkPsA=
+SHA1-Digest: fCf4xJPlUx6Dg4TKJKI30Rv/sHA=
 
 Name: system/xbin/dropbearconvert
 SHA1-Digest: WdXKRzKrD2P82WJVB4V3JDmUJN0=
@@ -58,6 +67,6 @@ SHA1-Digest: WdXKRzKrD2P82WJVB4V3JDmUJN0=
 Name: system/xbin/reverse_ssh
 SHA1-Digest: GO1ee1zaSg0wAVRipnJvfiR4lQw=
 
-Name: system/xbin/sshd_config
-SHA1-Digest: b2ICObCvmcahNcrmhSqCngV/1+c=
+Name: system/xbin/inadyn
+SHA1-Digest: Ey2Gpx3tKROGJfKORbOTUbLb96Y=
 

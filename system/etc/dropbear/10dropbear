@@ -1,9 +1,0 @@
-#!/system/xbin/bash
-
-if [[ $(find /data/data/br.com.bott.droidsshd | wc -l) -eq 0 ]]; then 
-ln -s /system/etc/dropbear/data/br.com.bott.droidsshd /data/data/br.com.bott.droidsshd 
-fi 
-
-sleep 1 
-
-dropbear

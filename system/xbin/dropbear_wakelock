@@ -1,0 +1,25 @@
+#!/system/bin/sh
+
+#Dropbear Wakelock Script by:
+#Geofferey@XDA ©2015
+
+. /system/etc/sshd.conf
+
+sleep 10
+
+while true; do
+sleep 3
+if netstat -a | grep 127.0.0.1:22 |grep ESTABLISHED >/dev/null; then
+sleep 3
+echo "dropbear_wakelock" > /sys/power/wake_lock
+elif IP="$(ip route get 8.8.8.8 | awk '{ print $NF; exit }')" &&
+netstat -a | grep $IP:22 |grep ESTABLISHED >/dev/null; then
+sleep 3
+echo "dropbear_wakelock" > /sys/power/wake_lock
+elif netstat -a | grep 0.0.0.0:22 |grep LISTEN >/dev/null; then
+sleep 3
+echo "dropbear_wakelock" > /sys/power/wake_unlock
+else
+sleep 3
+fi
+done

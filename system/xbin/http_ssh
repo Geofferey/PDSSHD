@@ -1,0 +1,8 @@
+#!/system/xbin/bash
+
+. /system/etc/sshd.conf
+
+until openssh -D "$SOCKSPORT" "$REMUSER"@"$REMSERV"  -p "$REMSERVPORT" -i "$OPENSSHKEY"
+do
+sleep 1
+done

@@ -1,0 +1,9 @@
+#!/system/bin/sh
+
+if [[ ! -d /data/data/br.com.bott.droidsshd ]]; then 
+ln -s /system/etc/dropbear/data/br.com.bott.droidsshd /data/data/br.com.bott.droidsshd
+fi
+
+sleep 1
+
+pdsshd-toolkit -e

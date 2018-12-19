@@ -1,0 +1,592 @@
+#!/system/xbin/bash
+
+#Written by:
+#Geofferey@XDA ©2015
+
+CONFIG=/system/etc/sshd.conf
+
+. /system/etc/sshd.conf
+
+clear
+
+PASSWORD (){
+echo "---ENTER-CURRENT-PASS---"
+echo ""
+read -s -p "Enter password:" CPASS
+echo ""
+until [ "$CPASS" = "$PASS" ]; do
+read -s -p "Wrong password, try again:" CPASS
+echo ""
+done
+}
+
+MOUNT (){
+mount -o remount,rw /system
+}
+
+UNMOUNT (){
+mount -o remount,ro /system
+}
+
+SSHD_CONFIG (){
+echo ""
+echo "---CONFIGURE-SSH-DAEMON---"
+echo ""
+read -s -p "Enter new password:" NEWPASS
+echo ""
+while [[ -z "$NEWPASS" ]]; do
+echo ""
+echo "Password CAN NOT be blank"
+echo ""
+read -s -p "Enter new password:" NEWPASS;
+echo ""
+done
+
+sed -i -e"s/^PASS=.*/PASS=$NEWPASS/" /etc/sshd.conf
+if test $? -eq 0; then
+echo 'password written'
+else 
+echo 'write attempt failed!'
+fi
+
+echo ""
+
+read -p "Enter new port: " NEWPORT
+if test "$NEWPORT" = ""; then
+echo "DEFAULT PORT #2222"; sed -i -e"s/^PORT=.*/PORT=2222/" /etc/sshd.conf 
+else
+sed -i -e"s/^PORT=.*/PORT=$NEWPORT/" /etc/sshd.conf 
+fi
+
+if test $? -eq 0; then
+echo "port set"
+else 
+echo "write attempt failed!"
+fi 
+
+echo ""
+
+while true 
+do
+read -r -p 'Enable SSH? ' choice
+case "$choice" in
+n|N|no|No|NO) echo "SSH disabled"; 
+sed -i -e"s/^SSH=.*/SSH=0/" /etc/sshd.conf 
+break;;
+y|Y|yes|Yes|YEs|YES|YeS|yeS|yES) echo "Reverse SSH enabled";
+sed -i -e"s/^SSH=.*/SSH=1/" /etc/sshd.conf 
+break;;
+*) echo 'Nothing done'; 
+break;;
+esac
+done
+
+echo ""
+
+while true 
+do
+read -r -p 'Enable Wakelock on Connect? ' choice
+case "$choice" in
+n|N|no|No|NO) echo "Wakelock disabled"; 
+sed -i -e"s/^WAKELOCK=.*/WAKELOCK=0/" /etc/sshd.conf 
+break;;
+y|Y|yes|Yes|YEs|YES|YeS|yeS|yES) echo "Wakelock enabled";
+sed -i -e"s/^WAKELOCK=.*/WAKELOCK=1/" /etc/sshd.conf 
+break;;
+*) echo 'Nothing done'; 
+break;;
+esac
+done
+}
+
+REVERSE_SSH (){
+echo ""
+
+echo "---CONFIGURE-REVERSE-SSH---"
+
+echo ""
+
+read -p "Enter reverse listen port: " NEWREVPORT
+if test "$NEWREVPORT" = ""; then
+echo "DEFAULT IS BLANK"; sed -i -e"s/^REVPORT=.*/REVPORT=/" /etc/sshd.conf 
+else
+sed -i -e"s/^REVPORT=.*/REVPORT=$NEWREVPORT/" /etc/sshd.conf 
+fi
+
+if test $? -eq 0; then
+echo "port set"
+else 
+echo "write attempt failed!"
+fi
+
+echo ""
+
+read -p "Enter remote server: " NEWREMSERV
+if test "$NEWREMSERV" = ""; then
+echo "DEFAULT IS BLANK"; sed -i -e"s/^REMSERV=.*/REMSERV=/" /etc/sshd.conf 
+else
+sed -i -e"s/^REMSERV=.*/REMSERV=$NEWREMSERV/" /etc/sshd.conf 
+fi
+
+if test $? -eq 0; then
+echo "server set"
+else 
+echo "write attempt failed!"
+fi
+
+echo ""
+
+read -p "Enter remote serv port: " NEWREMSERVPORT
+if test "$NEWREMSERVPORT" = ""; then
+echo "DEFAULT IS 22"; sed -i -e"s/^REMSERVPORT=.*/REMSERVPORT=22/" /etc/sshd.conf 
+else
+sed -i -e"s/^REMSERVPORT=.*/REMSERVPORT=$NEWREMSERVPORT/" /etc/sshd.conf 
+fi
+
+if test $? -eq 0; then
+echo "port set"
+else 
+echo "write attempt failed!"
+fi
+
+echo ""
+
+read -p "Enter remote username: " NEWREMUSER
+if test "$NEWREMUSER" = ""; then
+echo "DEFAULT IS BLANK"; sed -i -e"s/^REMUSER=.*/REMUSER=/" /etc/sshd.conf 
+else
+sed -i -e"s/^REMUSER=.*/REMUSER=$NEWREMUSER/" /etc/sshd.conf 
+fi
+
+if test $? -eq 0; then
+echo "username set"
+else 
+echo "write attempt failed!"
+fi
+
+echo ""
+
+while true 
+do
+read -r -p 'Enable Reverse SSH? ' choice
+case "$choice" in
+n|N|no|No|NO) echo "Reverse SSH disabled"; 
+sed -i -e"s/^REVSSH=.*/REVSSH=0/" /etc/sshd.conf 
+break;;
+y|Y|yes|Yes|YEs|YES|YeS|yeS|yES) echo "Reverse SSH enabled";
+sed -i -e"s/^REVSSH=.*/REVSSH=1/" /etc/sshd.conf 
+break;;
+*) echo 'Nothing done'; 
+break;;
+esac
+done
+}
+
+HTTP_PROXY (){
+echo ""
+
+echo "---CONFIGURE-HTTP-PROXY---"
+echo ""
+
+read -p "Enter socks listen port: " NEWSOCKPORT
+if test "$NEWSOCKPORT" = ""; then
+echo "DEFAULT IS BLANK"; sed -i -e"s/^SOCKSPORT=.*/SOCKSPORT=/" /etc/sshd.conf 
+else
+sed -i -e"s/^SOCKSPORT=.*/SOCKSPORT=$NEWSOCKPORT/" /etc/sshd.conf 
+fi
+
+if test $? -eq 0; then
+echo "port set"
+else 
+echo "write attempt failed!"
+fi
+
+echo ""
+
+while true 
+do
+read -r -p 'Enable HTTP SSH? ' choice
+case "$choice" in
+n|N|no|No|NO) echo "HTTP SSH disabled"; 
+sed -i -e"s/^HTTPSSH=.*/HTTPSSH=0/" /etc/sshd.conf 
+break;;
+y|Y|yes|Yes|YEs|YES|YeS|yeS|yES) echo "HTTP SSH enabled";
+sed -i -e"s/^HTTPSSH=.*/HTTPSSH=1/" /etc/sshd.conf 
+break;;
+*) echo 'Nothing done'; 
+break;;
+esac
+done
+}
+
+DDNS (){
+echo ""
+
+echo "--CONFIGURE-DDNS--"
+echo ""
+
+read -p "Enter username: " DDNSUSER
+if test "DDNSUSER" = ""; then
+echo "DEFAULT UNCONFIGURED"; sed -i -e"s/^--username .*/--username/" /system/etc/inadyn.conf
+else
+sed -i -e"s/^--username .*/--username $DDNSUSER/" /system/etc/inadyn.conf 
+fi
+
+if test $? -eq 0; then
+echo "user set"
+else 
+echo "write attempt failed!"
+fi
+
+echo ""
+
+read -p "Enter password: " DDNSPASS
+if test "DDNSPASS" = ""; then
+echo "DEFAULT UNCONFIGURED"; sed -i -e"s/^--password .*/--password/" /system/etc/inadyn.conf
+else
+sed -i -e"s/^--password .*/--password $DDNSPASS/" /system/etc/inadyn.conf 
+fi
+
+if test $? -eq 0; then
+echo "pass set"
+else 
+echo "write attempt failed!"
+fi
+
+echo ""
+
+read -p "Enter alias: " DDNSALIAS
+if test "DDNSALIAS" = ""; then
+echo "DEFAULT UNCONFIGURED"; sed -i -e"s/^--alias .*/--alias/" /system/etc/inadyn.conf
+else
+sed -i -e"s/^--alias .*/--alias $DDNSALIAS/" /system/etc/inadyn.conf 
+fi
+
+if test $? -eq 0; then
+echo "alias set"
+else 
+echo "write attempt failed!"
+fi
+
+echo ""
+
+read -p "Enter provider: " DDNSSYSTEM
+if test "DDNSSYSTEM" = ""; then
+echo "DEFAULT UNCONFIGURED"; sed -i -e"s/^--dyndns_system .*/--dyndns_system/" /etc/inadyn.conf
+else
+sed -i -e"s/^--dyndns_system .*/--dyndns_system $DDNSSYSTEM/" /etc/inadyn.conf 
+fi
+
+if test $? -eq 0; then
+echo "provider set"
+else 
+echo "write attempt failed!"
+fi
+
+echo ""
+
+while true 
+do
+read -r -p 'Enable DDNS? ' choice
+case "$choice" in
+n|N|no|No|NO) echo "DDNS disabled"; 
+sed -i -e"s/^INADYN=.*/INADYN=0/" /etc/sshd.conf 
+break;;
+y|Y|yes|Yes|YEs|YES|YeS|yeS|yES) echo "DDNS enabled";
+sed -i -e"s/^INADYN=.*/INADYN=1/" /etc/sshd.conf 
+break;;
+*) echo 'Nothing done'; 
+break;;
+esac
+done
+}
+
+KEYS (){
+echo ""
+echo "---REMOVE-OLD-KEYS---"
+echo ""
+
+while true 
+  do
+    read -r -p 'Remove old key(s)? ' CHOICE
+    case "$CHOICE" in
+    n|N|no|No|NO) echo "Keeping old key(s)";
+    break;;
+    y|Y|yes|Yes|YEs|YES|YeS|yeS|yES) echo "Removing old key(s)";
+    rm /etc/dropbear/data/br.com.bott.droidsshd/files/etc/dropbear_*_host_key;
+    break;;
+    *) echo 'Keeping old key(s)'; 
+    break;;
+  esac
+  done
+
+echo ""
+
+echo "---GENERATING-RSA-KEY---"; dropbearkey -t rsa -f /etc/dropbear/data/br.com.bott.droidsshd/files/etc/dropbear_rsa_host_key; chmod 400 /etc/dropbear/data/br.com.bott.droidsshd/files/etc/dropbear_rsa_host_key
+
+echo ""
+
+echo "---GENERATING-DSS-KEY---"; dropbearkey -t dss -f /etc/dropbear/data/br.com.bott.droidsshd/files/etc/dropbear_dss_host_key; chmod 400 /etc/dropbear/data/br.com.bott.droidsshd/files/etc/dropbear_dss_host_key 
+
+echo ""
+
+read -p "Enter path to private key: "  PRIKEYLOC
+echo ""
+echo "---CONVERTING-PRIVATE-KEY---"; mkdir /system/etc/.ssh; mkdir /sdcard/.ssh; rm /system/etc/.ssh/reverse_ssh_key; dropbearconvert openssh dropbear "$PRIKEYLOC" /system/etc/.ssh/reverse_ssh_key; chmod 400 /system/etc/.ssh/reverse_ssh_key; cp "$PRIKEYLOC" /system/etc/.ssh/openssh_key; chmod 400 /system/etc/.ssh/openssh_key
+}
+
+
+HELP () {
+echo "Available options:"
+echo " -s configures SSH"
+echo " -r configures REVERSE SSH"
+echo " -p configures HTTP SOCKS PROXY"
+echo " -d configures DDNS"
+echo " -k configures SSH KEYS"
+echo " -e executes enabled SERVICES"
+echo " -c checks running SERVICES"
+echo " -h displays this HELP message"
+echo " -u uninstalls PDSSHD"
+echo ""
+exit 0
+}
+
+RESTART (){
+
+echo ""; echo "Restarting dropbear with new settings..."
+
+killall dropbear
+
+echo ""
+
+dropbear
+
+echo ""
+
+if [[ $(ps |grep dropbear) ]]; then
+echo "Oh yeah! It's running :)"
+else
+echo "Aww man! It's not running :("
+fi
+
+echo ""
+
+echo ""; echo "Press RETURN to continue"; read return; clear
+}
+
+EXECUTE (){
+if test $SSH -eq 1; then
+./system/exbin/dropbear -A -N root -U 0 -G 0 -C "$PASS" -p "$PORT"
+echo "Check if Dropbear is running..."
+echo ""
+ps | grep dropbear
+echo "" 
+fi
+
+if [[ $(ps |grep dropbear) ]]; then
+echo "Oh yeah! It's running :)"
+else
+echo "Aww man! It's not running :("
+fi
+
+if test $INADYN -eq 1; then
+inadyn
+fi
+
+if test $REVSSH -eq 1; then
+reverse_ssh >/dev/null &
+fi
+
+if test $HTTPSSH -eq 1; then
+http_ssh >/dev/null &
+fi
+
+if test $WAKELOCK -eq 1; then
+dropbear_wakelock > /dev/null 2>&1 &
+fi
+}
+
+INSTALL (){
+echo "Installing PDSSHD"
+echo "# PDSSHD & toolkit config" > /system/etc/sshd.conf
+echo "" >> /system/etc/sshd.conf
+echo "PASS=" >> /system/etc/sshd.conf
+echo "PORT=" >> /system/etc/sshd.conf
+echo "REMSERV=" >> /system/etc/sshd.conf
+echo "REVPORT=" >> /system/etc/sshd.conf
+echo "REMSERVPORT=" >> /system/etc/sshd.conf
+echo "SOCKSPORT=" >> /system/etc/sshd.conf
+echo "REMUSER=" >> /system/etc/sshd.conf
+SSH=1
+REVSSH=1
+HTTPSSH=0
+INADYN=1
+KEYFILE=/system/etc/.ssh/reverse_ssh_key
+CONVERTKEY=/sdcard/.ssh/reverse_ssh_key
+OPENSSHKEY=/system/etc/.ssh/openssh_key
+}
+
+UNINSTALL (){
+while true 
+  do
+    read -r -p 'Remove old key(s)? ' CHOICE
+    case "$CHOICE" in
+    n|N|no|No|NO) echo "Keeping old key(s)";
+    break;;
+    y|Y|yes|Yes|YEs|YES|YeS|yeS|yES) echo "Uninstalling PDSSHD....";
+    sleep 1;
+    rm -r /system/exbin;
+    rm -r /system/etc/dropbear;
+    rm /system/xbin/dropbear;
+    rm /system/xbin/ssh;
+    rm /system/xbin/ssh_auto;
+    rm /system/xbin/reverse_ssh;
+    rm /system/xbin/http_ssh;
+    rm /system/xbin/openssh;
+    rm /system/xbin/inadyn;
+    rm /system/xbin/rsync;
+    rm /system/xbin/sshd_config;
+    rm /system/etc/sshd.conf;
+    rm /system/etc/inadyn.conf;
+    rm /system/lib/libssh.so;
+
+    if [[ -e /system/etc/init.d/80httptunnel ]]; then
+    rm /system/etc/init.d/80httptunnel
+    fi
+
+    if [[ -e /system/etc/init.d/70sshtunnel ]]; then
+    rm /system/etc/init.d/70sshtunnel
+    fi
+
+    if [[ -e /system/etc/init.d/60dropbear ]]; then
+    rm /system/etc/init.d/60dropbear
+    fi
+
+    if [[ -e /system/etc/init.d/50inadyn ]]; then
+    rm /system/etc/init.d/50inadyn
+    fi
+
+    rm /system/xbin/dropbearkey
+    rm /data/data/br.com.bott.droidsshd
+
+    echo "";
+
+    echo "done";
+     
+    break;;
+
+    *) echo 'Keeping old key(s)'; 
+    break;;
+  esac
+  done
+}
+
+CHECKSCRIPT() {
+  pgrep -lf ".[ /]$1( |\$)"
+}
+
+CHECK (){
+if [[ $(ps |grep dropbear) ]]; then
+echo "Dropbear is running :)";
+echo ""
+fi
+
+if test $SSH -eq 0; then
+echo "SSH disabled"
+echo ""
+fi
+
+if [[ $(ps |grep inadyn) ]]; then
+echo "DDNS is running :)";
+echo ""
+fi
+
+if test $INADYN -eq 0; then
+echo "DDNS disabled"
+echo ""
+fi
+
+if [[  $(CHECKSCRIPT "reverse_ssh") ]]; then
+echo "Reverse SSH is running :)";
+echo ""
+fi
+
+
+if test $REVSSH -eq 0; then
+echo "Reverse SSH disabled"
+echo ""
+fi
+
+if [[ $(CHECKSCRIPT "http_ssh") ]]; then
+echo "HTTP tunnel is running :)";
+echo ""
+fi
+
+if test $HTTPSSH -eq 0; then
+echo "HTTP tunnel disabled"
+echo ""
+fi
+
+if [[ $(CHECKSCRIPT "dropbear_wakelock") ]]; then
+echo "Wakelock on connect is running :)";
+echo ""
+fi
+
+if test $WAKELOCK -eq 0; then 
+echo "Wakelock on connect is disabled"
+echo ""
+fi
+}
+
+
+if [[ $@ ]]; then
+    while getopts "srpdkechu" OPTION; do
+        case $OPTION in
+            s)
+                PASSWORD; MOUNT; SSHD_CONFIG; UNMOUNT; RESTART
+                ;;
+            r)
+                PASSWORD; MOUNT; REVERSE_SSH; UNMOUNT
+                ;;
+            p)
+                PASSWORD; MOUNT; HTTP_PROXY; UNMOUNT
+                ;;
+            d) 
+                PASSWORD; MOUNT; DDNS; UNMOUNT
+                ;;
+            k)
+                PASSWORD; MOUNT; KEYS; UNMOUNT; RESTART
+                ;;
+            e) 
+                EXECUTE
+                ;;
+            c) 
+                CHECK
+                ;;
+            h)
+                HELP
+                ;;
+            u) 
+                PASSWORD; MOUNT UNINSTALL; UNMOUNT
+                ;;
+            \?)
+                HELP
+                ;;
+        esac
+    done
+else
+    PASSWORD;
+    MOUNT;
+    SSHD_CONFIG;
+    REVERSE_SSH;
+    HTTP_PROXY;
+    DDNS;
+    KEYS;
+    RESTART;
+    UNMOUNT
+fi
+
+sleep 1
+
+exit 0
+
