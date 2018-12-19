@@ -1,14 +1,14 @@
 #!/system/xbin/bash
 
 #Written by:
-#Geofferey@XDA ©2016
+#Geofferey@XDA ©2017
 
 CONF=/system/etc/pdsshd.conf
 
 . "$CONF"
 
 clear
-echo "PDSSHD v2.08 by:"
+echo "PDSSHD v2.09 by:"
 echo "Geofferey@XDA forums"
 sleep 2
 
@@ -56,6 +56,7 @@ echo ""
 done
 
 sed -i -e"s/^PASS=.*/PASS=$NEWPASS/" "$CONF"
+
 if test $? -eq 0; then
 echo 'password written'
 else 
@@ -64,7 +65,24 @@ fi
 
 echo ""
 
-read -p "Enter new port: " NEWPORT
+while true 
+do
+read -r -p 'Enable Dropbear SSH? ' choice
+case "$choice" in
+n|N|no|No|NO) echo "Dropbear SSH disabled"; 
+sed -i -e"s/^DROPBEAR=.*/DROPBEAR=0/" "$CONF"
+break;;
+y|Y|yes|Yes|YEs|YES|YeS|yeS|yES) echo "Dropbear SSH enabled";
+sed -i -e"s/^DROPBEAR=.*/DROPBEAR=1/" "$CONF"
+break;;
+*) echo 'Nothing done'; 
+break;;
+esac
+done
+
+echo ""
+
+read -p "Enter listen port: " NEWPORT
 if test "$NEWPORT" = ""; then
 echo "DEFAULT PORT #2222"; sed -i -e"s/^PORT=.*/PORT=2222/" "$CONF"
 else
@@ -81,18 +99,33 @@ echo ""
 
 while true 
 do
-read -r -p 'Enable SSH? ' choice
+read -r -p 'Enable Openssh? ' choice
 case "$choice" in
-n|N|no|No|NO) echo "SSH disabled"; 
-sed -i -e"s/^SSH=.*/SSH=0/" "$CONF"
+n|N|no|No|NO) echo "Openssh disabled"; 
+sed -i -e"s/^OPENSSH=.*/OPENSSH=0/" "$CONF"
 break;;
-y|Y|yes|Yes|YEs|YES|YeS|yeS|yES) echo "SSH enabled";
-sed -i -e"s/^SSH=.*/SSH=1/" "$CONF"
+y|Y|yes|Yes|YEs|YES|YeS|yeS|yES) echo "Openssh enabled";
+sed -i -e"s/^OPENSSH=.*/OPENSSH=1/" "$CONF"
 break;;
 *) echo 'Nothing done'; 
 break;;
 esac
 done
+
+echo ""
+
+read -p "Enter listen port: " NEWOPORT
+if test "$NEWPORT" = ""; then
+echo "DEFAULT PORT 22"; sed -i -e"s/^OPORT=.*/OPORT=22/" "$CONF"
+else
+sed -i -e"s/^OPORT=.*/OPORT=$NEWOPORT/" "$CONF"
+fi
+
+if test $? -eq 0; then
+echo "port set"
+else 
+echo "write attempt failed!"
+fi 
 
 echo ""
 
@@ -110,6 +143,21 @@ break;;
 break;;
 esac
 done
+
+echo ""
+
+read -p "Enter port to monitor: " NEWWLKPORT
+if test "$NEWWLKPORT" = ""; then
+echo "DEFAULT IS" $PORT; sed -i -e"s/^WLKPORT=.*/WLKPORT=$PORT/" "$CONF"
+else
+sed -i -e"s/^WLKPORT=.*/WLKPORT=$NEWWLKPORT/" "$CONF"
+fi
+
+if test $? -eq 0; then
+echo "port set"
+else 
+echo "write attempt failed!"
+fi 
 
 echo ""
 
@@ -133,6 +181,21 @@ REVERSE_SSH (){
 echo ""
 
 echo "---CONFIGURE-REVERSE-SSH---"
+
+echo ""
+
+read -p "Enter port to forward: " NEWLPORT
+if test "$NEWLPORT" = ""; then
+echo "DEFAULT IS" $PORT; sed -i -e"s/^LPORT=.*/LPORT=$PORT/" "$CONF"
+else
+sed -i -e"s/^LPORT=.*/LPORT=$NEWLPORT/" "$CONF"
+fi
+
+if test $? -eq 0; then
+echo "port set"
+else 
+echo "write attempt failed!"
+fi
 
 echo ""
 
@@ -426,7 +489,7 @@ echo ""; echo "Press RETURN to continue"; read return; clear
 }
 
 EXECUTE (){
-if test $SSH -eq 1; then
+if test $DROPBEAR -eq 1; then
 ./system/exbin/dropbear -A -N root -U 0 -G 0 -R /etc/.ssh/authorized_keys/id_rsa.pub -C "$PASS" -p "$PORT"
 echo "Check if Dropbear is running..."
 echo ""
@@ -435,9 +498,15 @@ echo ""
 fi
 
 if [[ $(ps |grep dropbear) ]]; then
-echo "Oh yeah! It's running :)"
+echo "Oh yeah! Dropbear is running :)"
 else
-echo "Aww man! It's not running :("
+echo "Aww man! Dropbear isn't running :("
+fi
+
+if [[ $(ps |grep sshd) ]]; then
+echo "Oh yeah! Openssh is running :)"
+else
+echo "Aww man! Openssh isn't running :("
 fi
 
 if test $INADYN -eq 1; then
@@ -455,6 +524,10 @@ fi
 if test $WAKELOCK -eq 1; then
 dropbear_wakelock > /dev/null 2>&1 &
 fi
+
+if test $OPENSSH -eq 1; then 
+/system/bin/start-ssh > /dev/null &
+fi 
 }
 
 INSTALL (){
@@ -468,7 +541,7 @@ echo "REVPORT=" >> /system/etc/sshd.conf
 echo "REMSERVPORT=" >> /system/etc/sshd.conf
 echo "SOCKSPORT=" >> /system/etc/sshd.conf
 echo "REMUSER=" >> /system/etc/sshd.conf
-SSH=1
+DROPBEAR=1
 REVSSH=1
 HTTPSSH=0
 INADYN=1
@@ -533,8 +606,18 @@ echo "Dropbear is running :)";
 echo ""
 fi
 
-if test $SSH -eq 0; then
-echo "SSH disabled"
+if test $DROPBEAR -eq 0; then
+echo "DROPBEAR disabled"
+echo ""
+fi
+
+if [[ $(ps |grep sshd) ]]; then
+echo "Openssh is running :)";
+echo ""
+fi
+
+if test $OPENSSH -eq 0; then
+echo "OPENSSH disabled"
 echo ""
 fi
 

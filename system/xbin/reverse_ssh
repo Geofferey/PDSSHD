@@ -4,7 +4,7 @@
 
 while true; do
 sleep 10; ssh -T -i "$KEYFILE" "$REMUSER"@"$REMSERV" -p "$REMSERVPORT" -y ssh localhost -p "$REVPORT";
-if ! ssh -N -g -T -K 180 -i "$KEYFILE" -R "$REVPORT":localhost:"$PORT" "$REMUSER"@"$REMSERV" -p "$REMSERVPORT" -y 
+if ! ssh -N -g -T -K 180 -i "$KEYFILE" -R "$REVPORT":localhost:"$LPORT" "$REMUSER"@"$REMSERV" -p "$REMSERVPORT" -y 
 then
 sleep 10; ssh -T -i "$KEYFILE" "$REMUSER"@"$REMSERV" -p "$REMSERVPORT" -y ssh localhost -p "$REVPORT"
 fi

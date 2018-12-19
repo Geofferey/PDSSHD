@@ -1,0 +1,71 @@
+#!/system/bin/sh
+
+umask 077
+
+DEBUG=0
+
+CONF=/system/etc/pdsshd.conf
+
+. "$CONF"
+
+ETC_DSA_KEY=/etc/ssh/ssh_host_dsa_key
+DSA_KEY=/data/ssh/ssh_host_dsa_key
+ETC_DSA_PUB_KEY=/etc/ssh/ssh_host_dsa_key.pub
+DSA_PUB_KEY=/data/ssh/ssh_host_dsa_key.pub
+ETC_RSA_KEY=/etc/ssh/ssh_host_rsa_key
+RSA_KEY=/data/ssh/ssh_host_rsa_key
+ETC_RSA_PUB_KEY=/etc/ssh/ssh_host_rsa_key.pub
+RSA_PUB_KEY=/data/ssh/ssh_host_rsa_key.pub
+AUTHORIZED_KEYS=/data/ssh/authorized_keys
+DEFAULT_AUTHORIZED_KEYS=/system/etc/security/authorized_keys.default
+
+if [ ! -d /data/ssh ]; then
+     mkdir /data/ssh
+fi
+
+if [ ! -d /data/ssh/empty ]; then
+     mkdir /data/ssh/empty
+fi
+
+if [ -f $ETC_DSA_KEY ] && [ ! -f $DSA_KEY ]; then
+     cp $ETC_DSA_KEY /data/ssh/
+     cp $ETC_DSA_PUB_KEY /data/ssh/
+     chmod 600 /$DSA_KEY
+     chmod 644 $DSA_PUB_KEY
+fi
+
+if [ ! -f $DSA_KEY ]; then
+    /system/bin/ssh-keygen -t dsa -f $DSA_KEY -N ""
+    chmod 600 /$DSA_KEY
+    chmod 644 $DSA_PUB_KEY
+fi
+
+if [ -f $ETC_RSA_KEY ] && [ ! -f $RSA_KEY ]; then
+     cp $ETC_RSA_KEY /data/ssh/
+     cp $ETC_RSA_PUB_KEY /data/ssh/
+     chmod 600 /$DSA_KEY
+     chmod 644 $RSA_PUB_KEY
+fi
+
+if [ ! -f $RSA_KEY ]; then
+    /system/bin/ssh-keygen -t rsa -f $RSA_KEY -N ""
+    chmod 600 /$RSA_KEY
+    chmod 644 $RSA_PUB_KEY
+fi
+
+if [[ ! -f $AUTHORIZED_KEYS && -f $DEFAULT_AUTHORIZED_KEYS ]]; then
+     cat $DEFAULT_AUTHORIZED_KEYS > $AUTHORIZED_KEYS
+fi
+
+if [[ ! -f $AUTHORIZED_KEYS &&  ! -f $DEFAULT_AUTHORIZED_KEYS ]]; then
+     /system/bin/ssh-keygen -t rsa -f /sdcard/id_rsa
+     cat /sdcard/id_rsa.pub >> $AUTHORIZED_KEYS
+fi
+
+if [ "1" == "$DEBUG" ] ; then
+    # run sshd in debug mode and capture output to logcat
+    /system/bin/logwrapper /system/bin/sshd -f /system/etc/ssh/sshd_config -d
+else
+    # don't daemonize - otherwise we can't stop the sshd service
+    /system/bin/sshd -f  /system/etc/ssh/sshd_config -p $OPORT
+fi

@@ -4,26 +4,17 @@ Created-By: 1.0 (Android SignApk)
 Name: system/xbin/ssh
 SHA1-Digest: iRuG4D/qw5yWrW6eYGlP0LP0w/E=
 
-Name: system/xbin/pdsshd-toolkit
-SHA1-Digest: UhENyP4xwcwStwkuJt52NRPwYLk=
-
 Name: META-INF/com/google/android/update-binary
 SHA1-Digest: anNllEtU555b2xIp2efyzCyRIKk=
 
-Name: META-INF/com/google/android/updater-script
-SHA1-Digest: irihivJcB0ortu92bFISwlavlW8=
-
-Name: system/xbin/dropbear_notify
-SHA1-Digest: 4Eq8pmYYVUkAm8xej/Wm0DZ8Nng=
-
-Name: system/xbin/dropbear_wakelock
-SHA1-Digest: /oytLUclY+cwDA2HDsvHRyb03rI=
+Name: system/bin/ssh-keygen
+SHA1-Digest: quVoXod+57A+2/QGNUjHGbsrsHk=
 
 Name: system/etc/dropbear/notification/Talitha.ogg
 SHA1-Digest: 71nv1DiSU+XMgQglCHGpqc8eSiY=
 
-Name: system/xbin/bash
-SHA1-Digest: F69Mawxw1zmAOQLGd0uxGGKimhA=
+Name: system/xbin/dropbear_wakelock
+SHA1-Digest: 8HVmaxLvBJPZZnjlDqd10yDP3yo=
 
 Name: system/exbin/dropbearmulti
 SHA1-Digest: 4wfsa+PmQO+zrEINyKBzK6hXEd0=
@@ -40,30 +31,54 @@ SHA1-Digest: 7Fg5Pxb7NovWjVC24b5YxHetY1M=
 Name: system/etc/.ssh/authorized_keys/PLACEHOLDER
 SHA1-Digest: 2jmj7l5rSw0yVb/vlWAYkK/YBwk=
 
+Name: system/etc/ssh/sshd_config
+SHA1-Digest: FBeqcfEYjlhW3saS6CkfLqTEz5k=
+
+Name: system/xbin/ssh_auto
+SHA1-Digest: M7DFXgRERa6+78r6mFWh4kdGw98=
+
+Name: system/bin/start-ssh
+SHA1-Digest: 4EWcDtWxL1xn0kjLXkgtgNy+Rq8=
+
+Name: system/etc/dropbear/notification/Beep.dex
+SHA1-Digest: +tdZe6nT8VRqp0NGxWPSbYE6sWI=
+
+Name: system/xbin/dropbear
+SHA1-Digest: yc0y932sqBMrUjQ3LwCV+1PKXh4=
+
+Name: system/etc/pdsshd.conf
+SHA1-Digest: HqDIubg7wxuj7yj9g54vEhWh0kA=
+
+Name: system/xbin/inadyn
+SHA1-Digest: 6/PVcJmW5qoTacXDS+Nq0X0Z0K8=
+
+Name: system/xbin/pdsshd-toolkit
+SHA1-Digest: 18FShKgZFctRwvD9lKzZzyWPtZ4=
+
+Name: META-INF/com/google/android/updater-script
+SHA1-Digest: 7hssZhwf6t6fZPZwZ/lUgUJXPS4=
+
+Name: system/xbin/dropbear_notify
+SHA1-Digest: 4Eq8pmYYVUkAm8xej/Wm0DZ8Nng=
+
+Name: system/xbin/bash
+SHA1-Digest: F69Mawxw1zmAOQLGd0uxGGKimhA=
+
+Name: system/lib64/libssh.so
+SHA1-Digest: C9F/GStnKiEVBInoZxtC+1+d0mQ=
+
 Name: system/xbin/sftp-server
 SHA1-Digest: wLxBcgmuXKdFNfeUm+bI+qHVh7E=
 
 Name: system/app/ShowToastMessage.apk
 SHA1-Digest: 5oh+CplcLlGD9+AwNeJg6Lb0kbM=
 
-Name: system/xbin/ssh_auto
-SHA1-Digest: M7DFXgRERa6+78r6mFWh4kdGw98=
-
 Name: system/xbin/reverse_ssh
-SHA1-Digest: vc7hHp2f6wgIhK6o2T9HjOU5NGA=
+SHA1-Digest: B96oMPVcQcKnGTJHsw4WqxoB0o8=
 
 Name: system/xbin/dropbearconvert
 SHA1-Digest: WdXKRzKrD2P82WJVB4V3JDmUJN0=
 
-Name: system/xbin/dropbear
-SHA1-Digest: yc0y932sqBMrUjQ3LwCV+1PKXh4=
-
-Name: system/etc/dropbear/notification/Beep.dex
-SHA1-Digest: +tdZe6nT8VRqp0NGxWPSbYE6sWI=
-
-Name: system/xbin/inadyn
-SHA1-Digest: Ey2Gpx3tKROGJfKORbOTUbLb96Y=
-
-Name: system/etc/pdsshd.conf
-SHA1-Digest: JWjiSVE/PJnsN9RVxtD1RtwLBg4=
+Name: system/bin/sshd
+SHA1-Digest: 8KDU5iV3zNI4IJCFcu9hhINYDNk=
 

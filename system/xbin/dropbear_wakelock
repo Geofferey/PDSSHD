@@ -10,38 +10,38 @@ sleep 10
 while true; do
 sleep 3
 
-if IP=$(getprop dhcp.wlan0.ipaddress) && netstat -n -a |grep "$IP":"$PORT" |grep ESTABLISHED && ! [ -z $IP ]; then
+if IP=$(getprop dhcp.wlan0.ipaddress) && netstat -n -a |grep "$IP":"$WLKPORT" |grep ESTABLISHED && ! [ -z $IP ]; then
 echo cond0
 sleep 2
 dropbear_notify
 echo "dropbear_wakelock" >> /sys/power/wake_lock
 
-elif netstat -a | grep 127.0.0.1:"$PORT" |grep ESTABLISHED >/dev/null; then
+elif netstat -a | grep 127.0.0.1:"$WLKPORT" |grep ESTABLISHED >/dev/null; then
 echo cond1
 sleep 2
 dropbear_notify
 echo "dropbear_wakelock" >> /sys/power/wake_lock
 
-elif IP="$(ifconfig wlan0 | awk '/inet addr/{print substr($2,6)}')" && netstat -n -a |grep $IP:"$PORT"| grep -w ESTABLISHED > /dev/null && ! [ -z $IP ]; then
+elif IP="$(ifconfig wlan0 | awk '/inet addr/{print substr($2,6)}')" && netstat -n -a |grep $IP:"$WLKPORT"| grep -w ESTABLISHED > /dev/null && ! [ -z $IP ]; then
 echo cond2
 sleep 2
 dropbear_notify
 echo "dropbear_wakelock" >> /sys/power/wake_lock
 
 elif IP="$(ip route get 8.8.8.8 | awk '{ print $NF; exit }')" &&
-netstat -a | grep $IP:"$PORT" |grep ESTABLISHED >/dev/null && ! [ -z $IP ]; then
+netstat -a | grep $IP:"$WLKPORT" |grep ESTABLISHED >/dev/null && ! [ -z $IP ]; then
 echo cond3
 sleep 2
 dropbear_notify
 echo "dropbear_wakelock" >> /sys/power/wake_lock
 
-elif netstat -a |grep -w localhost:ssh |grep -w ESTABLISHED >dev/null || netstat -a |grep -w localhost:"$PORT" |grep -w ESTABLISHED >dev/null; then
+elif netstat -a |grep -w localhost:ssh |grep -w ESTABLISHED >dev/null || netstat -a |grep -w localhost:"$WLKPORT" |grep -w ESTABLISHED >dev/null; then
 echo cond4
 sleep 2
 dropbear_notify
 echo "dropbear_wakelock" >> /sys/power/wake_lock
 
-elif netstat -a | grep 0.0.0.0:"$PORT" |grep LISTEN >/dev/null; then
+elif netstat -a | grep 0.0.0.0:"$WLKPORT" |grep LISTEN >/dev/null; then
 echo cond5
 sleep 2
 echo "dropbear_wakelock" >> /sys/power/wake_unlock
