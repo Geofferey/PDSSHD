@@ -1,0 +1,15 @@
+#!/system/bin/sh
+
+if [ test $CONFIGURED -eq 0 ]; then
+mount -o remount,rw /system
+sleep 1
+cp -R /data/etc/ /system/
+sleep 1
+mount -o remount,ro /system
+fi
+
+. /system/etc/pdsshd.conf 
+
+sleep 1
+
+pdsshd-toolkit -e &

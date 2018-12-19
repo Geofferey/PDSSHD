@@ -1,10 +1,10 @@
 #!/system/xbin/bash
 
-. /system/etc/sshd.conf 
+. /system/etc/pdsshd.conf 
 
 cd /system/exbin
 
-./dropbear -A -N root -U 0 -G 0 -C "$PASS" -p "$PORT"
+./dropbear -A -N root -U 0 -G 0 -R /etc/.ssh/authorized_keys/id_rsa.pub -C "$PASS" -p "$PORT"
 
 echo "Check if Dropbear is running..."
 

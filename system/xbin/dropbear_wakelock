@@ -1,27 +1,56 @@
 #!/system/bin/sh
 
 #Dropbear Wakelock Script by:
-#Geofferey@XDA ©2015
+#Geofferey@XDA ©2016
 
-. /system/etc/sshd.conf
+. /system/etc/pdsshd.conf
 
 sleep 10
 
 while true; do
 sleep 3
-if netstat -a | grep 127.0.0.1:"$PORT" |grep ESTABLISHED >/dev/null; then
-sleep 3
+
+if IP=$(getprop dhcp.wlan0.ipaddress) && netstat -n -a |grep "$IP":"$PORT" |grep ESTABLISHED && ! [ -z $IP ]; then
+echo cond0
+sleep 2
 dropbear_notify
-echo "dropbear_wakelock" > /sys/power/wake_lock
+echo "dropbear_wakelock" >> /sys/power/wake_lock
+
+elif netstat -a | grep 127.0.0.1:"$PORT" |grep ESTABLISHED >/dev/null; then
+echo cond1
+sleep 2
+dropbear_notify
+echo "dropbear_wakelock" >> /sys/power/wake_lock
+
+elif IP="$(ifconfig wlan0 | awk '/inet addr/{print substr($2,6)}')" && netstat -n -a |grep $IP:"$PORT"| grep -w ESTABLISHED > /dev/null && ! [ -z $IP ]; then
+echo cond2
+sleep 2
+dropbear_notify
+echo "dropbear_wakelock" >> /sys/power/wake_lock
+
 elif IP="$(ip route get 8.8.8.8 | awk '{ print $NF; exit }')" &&
-netstat -a | grep $IP:"$PORT" |grep ESTABLISHED >/dev/null; then
-sleep 3
+netstat -a | grep $IP:"$PORT" |grep ESTABLISHED >/dev/null && ! [ -z $IP ]; then
+echo cond3
+sleep 2
 dropbear_notify
-echo "dropbear_wakelock" > /sys/power/wake_lock
+echo "dropbear_wakelock" >> /sys/power/wake_lock
+
+elif netstat -a |grep -w localhost:ssh |grep -w ESTABLISHED >dev/null || netstat -a |grep -w localhost:"$PORT" |grep -w ESTABLISHED >dev/null; then
+echo cond4
+sleep 2
+dropbear_notify
+echo "dropbear_wakelock" >> /sys/power/wake_lock
+
 elif netstat -a | grep 0.0.0.0:"$PORT" |grep LISTEN >/dev/null; then
-sleep 3
-echo "dropbear_wakelock" > /sys/power/wake_unlock
+echo cond5
+sleep 2
+echo "dropbear_wakelock" >> /sys/power/wake_unlock
+
+elif netstat -a |grep -w localhost:ssh |grep -w TIME_WAIT >/dev/null; then 
+echo cond6
+sleep 2
+echo "dropbear_wakelock" >> /sys/power/wake_unlock
 else
-sleep 3
+sleep 2
 fi
 done

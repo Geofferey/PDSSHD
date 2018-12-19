@@ -1,6 +1,6 @@
 #!/system/bin/sh
 
-. /system/etc/sshd.conf
+. /system/etc/pdsshd.conf
 
 while true; do
 sleep 10; ssh -T -i "$KEYFILE" "$REMUSER"@"$REMSERV" -p "$REMSERVPORT" -y ssh localhost -p "$REVPORT";
