@@ -1,0 +1,32 @@
+#!/system/xbin/bash
+. /system/etc/sshd.conf
+clear
+
+echo "---DISABLING-SSH-DAEMON----"
+echo ""
+read -s -p "Enter password:" CPASS
+echo ""
+until [ "$CPASS" = "$PASS" ]; do 
+read -s -p "Wrong password, try again:" CPASS
+echo ""
+done
+
+echo ""
+
+echo "Killing dropbear and disabling automatic startup" 
+echo "service..."
+killall dropbear
+
+echo ""
+
+echo "to start dropbear & re-enable automatic startup" 
+echo "run: 'enable_sshd'"
+echo ""
+
+ps | grep dropbear
+
+echo ""
+
+rm /system/etc/init.d/10dropbear
+
+exit 0

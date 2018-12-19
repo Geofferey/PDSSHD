@@ -1,0 +1,49 @@
+#!/system/xbin/bash
+. /system/etc/sshd.conf
+clear
+
+echo "---UNINSTALLING-SSH-DAEMON---" 
+echo ""
+read -s -p "Enter password:" CPASS
+echo ""
+until [ "$CPASS" = "$PASS" ]; do 
+read -s -p "Wrong password, try again:" CPASS
+echo ""
+done
+echo ""
+echo "Press RETURN to continue or ^C to cancel"; read return
+echo ""
+echo "One moment please...."
+
+sleep 3 
+
+rm -r /system/exbin
+
+rm -r /system/etc/dropbear
+
+rm /system/xbin/dropbear
+
+rm /system/xbin/ssh
+
+rm /system/xbin/sshd_config
+
+rm /system/xbin/enable_sshd
+
+rm /system/xbin/disable_sshd
+
+rm /system/etc/sshd.conf
+
+rm /system/etc/init.d/10dropbear
+
+rm /system/xbin/dropbearkey
+
+rm /data/data/br.com.bott.droidsshd
+
+rm /system/xbin/uninstall_sshd
+
+echo ""
+
+echo "done"
+
+exit 0
+

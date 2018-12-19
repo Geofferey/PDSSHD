@@ -1,0 +1,20 @@
+#!/system/xbin/bash
+
+. /system/etc/sshd.conf 
+
+cd /system/exbin
+
+./dropbear -A -N root -U 0 -G 0 -C "$PASS" -p "$PORT"
+
+echo "Check if Dropbear is running..."
+
+echo ""
+
+ps | grep dropbear
+
+echo "" 
+
+echo "done"
+
+exit 0
+

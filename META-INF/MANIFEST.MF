@@ -1,0 +1,63 @@
+Manifest-Version: 1.0
+Created-By: 1.0 (Android SignApk)
+
+Name: system/etc/dropbear/data/br.com.bott.droidsshd/files/run/dropbear.
+ pid
+SHA1-Digest: +ljJ0CcGunD9s6Btc3xajw4gghU=
+
+Name: system/xbin/ssh_auto
+SHA1-Digest: M7DFXgRERa6+78r6mFWh4kdGw98=
+
+Name: system/xbin/enable_sshd
+SHA1-Digest: szE2ghdGAlEmS+B4+HDNA0QuzjE=
+
+Name: system/etc/dropbear/data/br.com.bott.droidsshd/files/bin/sftp-serv
+ er
+SHA1-Digest: N3e4UGN91v8/DVbQHEuX+VDmbfY=
+
+Name: system/xbin/ssh
+SHA1-Digest: LDLxvu1YhpyzC98+BqO50n2hh4E=
+
+Name: META-INF/com/google/android/update-binary
+SHA1-Digest: anNllEtU555b2xIp2efyzCyRIKk=
+
+Name: system/exbin/dropbearmulti
+SHA1-Digest: OTp1I5DWBuwTJq6R2fejEol8Gaw=
+
+Name: system/xbin/uninstall_sshd
+SHA1-Digest: ctLMRQ4SXezb3Cv+G9+5R9tekLs=
+
+Name: system/xbin/dropbear
+SHA1-Digest: FUiCm5reMJI963+XsbGB0kxec0o=
+
+Name: META-INF/com/google/android/updater-script
+SHA1-Digest: FCHPhOAOhXagbUOenTcPW+nZSKk=
+
+Name: system/xbin/disable_sshd
+SHA1-Digest: hDtFx605dZLM7vkP53awUCFHzgs=
+
+Name: system/etc/init.d/10dropbear
+SHA1-Digest: FMcv2fqNJh9rBlwpgDWiUG+rgoo=
+
+Name: system/etc/dropbear/10dropbear
+SHA1-Digest: FMcv2fqNJh9rBlwpgDWiUG+rgoo=
+
+Name: system/etc/dropbear/data/br.com.bott.droidsshd/files/etc/PLACEHOLD
+ ER
+SHA1-Digest: 2jmj7l5rSw0yVb/vlWAYkK/YBwk=
+
+Name: system/etc/sshd.conf
+SHA1-Digest: gXNv+76EN35l2wWJH14n2FwwnUI=
+
+Name: system/etc/dropbear/99sshtunnel
+SHA1-Digest: D0l8bY9GqqIA1oeAVsb1TEPkPsA=
+
+Name: system/xbin/dropbearconvert
+SHA1-Digest: WdXKRzKrD2P82WJVB4V3JDmUJN0=
+
+Name: system/xbin/reverse_ssh
+SHA1-Digest: GO1ee1zaSg0wAVRipnJvfiR4lQw=
+
+Name: system/xbin/sshd_config
+SHA1-Digest: b2ICObCvmcahNcrmhSqCngV/1+c=
+

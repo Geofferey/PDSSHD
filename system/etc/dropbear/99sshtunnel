@@ -1,0 +1,10 @@
+#!/system/bin/sh
+
+. /etc/sshd.conf
+
+#until sleep 1; ssh -N -f -g -T -K 120 -i "$KEYFILE" -R #"$REVPORT":localhost:"$PORT" "$REMUSER"@"$REMSERV" -p #"$REMSERVPORT" -y
+#do
+#  sleep 300
+#done
+
+reverse_ssh >/dev/null 

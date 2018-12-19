@@ -1,0 +1,8 @@
+#!/system/xbin/bash
+
+. /system/etc/sshd.conf
+
+until ssh -N -g -T -K 180 -i "$KEYFILE" -R "$REVPORT":localhost:"$PORT" "$REMUSER"@"$REMSERV" -p "$REMSERVPORT" -y 
+do
+sleep 1; ssh -T -i "$KEYFILE" "$REMUSER"@"$REMSERV" -p "$REMSERVPORT" -y ssh localhost -p "$REVPORT"
+done

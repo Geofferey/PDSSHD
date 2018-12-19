@@ -1,0 +1,4 @@
+#!/system/xbin/bash
+#SSH AUTO START 
+clear
+ssh -l root localhost
