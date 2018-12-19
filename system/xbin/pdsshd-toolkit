@@ -97,6 +97,23 @@ break;;
 break;;
 esac
 done
+
+echo ""
+
+while true 
+do
+read -r -p 'Enable Notification on Connect? ' choice
+case "$choice" in
+n|N|no|No|NO) echo "Notification disabled"; 
+sed -i -e"s/^NOTIFY=.*/NOTIFY=0/" /etc/sshd.conf 
+break;;
+y|Y|yes|Yes|YEs|YES|YeS|yeS|yES) echo "Notification enabled";
+sed -i -e"s/^NOTIFY=.*/NOTIFY=1/" /etc/sshd.conf 
+break;;
+*) echo 'Nothing done'; 
+break;;
+esac
+done
 }
 
 REVERSE_SSH (){

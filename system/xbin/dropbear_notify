@@ -1,0 +1,18 @@
+#!/system/bin/sh
+
+. /system/etc/sshd.conf
+
+if test $NOTIFY -eq 0; then
+exit 0
+fi
+
+if ! cat /sys/power/wake_lock |grep dropbear_wakelock; then 
+
+export CLASSPATH=/system/etc/dropbear/data/br.com.bott.droidsshd/files/notification/Beep.dex
+
+app_process /system/bin Beep /system/etc/dropbear/data/br.com.bott.droidsshd/files/notification/Talitha.ogg
+
+am start -a android.intent.action.MAIN -e message "Incoming SSH connection established" -n com.rja.utility/.ShowToast
+fi
+
+exit 0

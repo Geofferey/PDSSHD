@@ -1,4 +1,4 @@
-ui_print("Persistent Dropbear SSHD v2 - by Geofferey@XDA");
+ui_print("Persistent Dropbear SSHD v2.0.6 - by Geofferey@XDA");
 unmount("/system");
 show_progress(0.1, 0);
 run_program("/sbin/busybox", "mount", "/system");
@@ -10,7 +10,9 @@ symlink("/system/etc/dropbear/data/br.com.bott.droidsshd", "/data/data/br.com.bo
 set_perm(0, 0, 0600, "/system/etc/dropbear");
 set_perm(0, 0, 0500, "/system/exbin/dropbearmulti");
 set_perm(0, 0, 0500, "/system/exbin/dropbear");
-set_perm(0, 0, 0500, "/system/exbin/dropbear_wakelock");
+set_perm(0, 0, 0500, "/system/xbin/dropbear_wakelock");
+set_perm(0, 0, 0500, "/system/xbin/dropbear_notify");
+set_perm(0, 0, 0555, "/system/xbin/bash");
 set_perm(0, 0, 0555, "/system/xbin/ssh_auto");
 set_perm(0, 0, 0555, "/system/xbin/ssh");
 set_perm(0, 0, 0500, "/system/xbin/inadyn");
@@ -22,18 +24,24 @@ set_perm(0, 0, 0500, "/system/xbin/pdsshd-toolkit");
 set_perm(0, 0, 0600, "/system/etc/sshd.conf");
 set_perm(0, 0, 0600, "/system/etc/inadyn.conf");
 set_perm(0, 0, 0500, "/system/xbin/reverse_ssh");
+set_perm(0, 0, 0500, "/system/etc/init.d/60dropbear");
 set_perm(0, 0, 0500, "/system/xbin/http_ssh");
+set_perm(0, 0, 0500, "/system/etc/dropbear/data/br.com.bott.droidsshd/files/notification/Beep.dex");
+set_perm(0, 0, 0444, "/system/etc/dropbear/data/br.com.bott.droidsshd/files/notification/Talitha.ogg");
 set_perm(0, 0, 0500, "/system/etc/dropbear/data/br.com.bott.droidsshd/files/bin/sftp-server");
 set_perm(0, 0, 0644, "/system/lib/libssh.so");
 set_perm(0, 0, 0000, "/system/etc/dropbear/data/br.com.bott.droidsshd/files/etc/PLACEHOLDER");
+set_perm(0, 0, 0000, "/system/bin/ssh");
 show_progress(0.2, 10);
 show_progress(0.1, 0);
+unmount("/system");
 ui_print("Done!");
 show_progress(0.1, 0);
 ui_print("MUST RUN 'pdsshd-toolkit' in terminal after install");
+ui_print("");
 ui_print("You may also run 'pdsshd-toolkit -h to see options");
 show_progress(0.1, 0);
-unmount("/system");
+
 
 
 

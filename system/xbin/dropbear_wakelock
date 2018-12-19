@@ -9,14 +9,16 @@ sleep 10
 
 while true; do
 sleep 3
-if netstat -a | grep 127.0.0.1:22 |grep ESTABLISHED >/dev/null; then
+if netstat -a | grep 127.0.0.1:"$PORT" |grep ESTABLISHED >/dev/null; then
 sleep 3
+dropbear_notify
 echo "dropbear_wakelock" > /sys/power/wake_lock
 elif IP="$(ip route get 8.8.8.8 | awk '{ print $NF; exit }')" &&
-netstat -a | grep $IP:22 |grep ESTABLISHED >/dev/null; then
+netstat -a | grep $IP:"$PORT" |grep ESTABLISHED >/dev/null; then
 sleep 3
+dropbear_notify
 echo "dropbear_wakelock" > /sys/power/wake_lock
-elif netstat -a | grep 0.0.0.0:22 |grep LISTEN >/dev/null; then
+elif netstat -a | grep 0.0.0.0:"$PORT" |grep LISTEN >/dev/null; then
 sleep 3
 echo "dropbear_wakelock" > /sys/power/wake_unlock
 else
