@@ -1,11 +1,35 @@
 #!/system/bin/sh
 
+#PDSSHD Reverse SSH  Script by:
+#Geofferey@XDA ©2019 -
+#Free to redistribute & modify
+
 . /system/etc/pdsshd.conf
 
+if [ $REVSSH -eq 1 ]; then
+
+if [ -e $REVSSH_PID ]; then
+kill -9 $(cat $REVSSH_PID) >> /dev/null 2>&1
+rm $REVSSH_PID
+fi
+
+echo $$ > $REVSSH_PID
+
+chmod 644 $REVSSH_PID
+
 while true; do
-sleep 10; ssh -T -i "$KEYFILE" "$REMUSER"@"$REMSERV" -p "$REMSERVPORT" -y ssh localhost -p "$REVPORT";
-if ! ssh -N -g -T -K 180 -i "$KEYFILE" -R "$REVPORT":localhost:"$LPORT" "$REMUSER"@"$REMSERV" -p "$REMSERVPORT" -y 
-then
-sleep 10; ssh -T -i "$KEYFILE" "$REMUSER"@"$REMSERV" -p "$REMSERVPORT" -y ssh localhost -p "$REVPORT"
+
+sleep 10
+
+dbclient -T -i "$KEYFILE" "$REMUSER"@"$REMSERV" -p "$REMSERVPORT" -y ssh localhost -p "$REVPORT" >> /dev/null 2>&1
+
+if ! dbclient -N -g -T -K 180 -i "$KEYFILE" -R "$REVPORT":localhost:"$PORT" "$REMUSER"@"$REMSERV" -p "$REMSERVPORT" -y >> /dev/null 2>&1; then
+
+sleep 10
+
+dbclient -T -i "$KEYFILE" "$REMUSER"@"$REMSERV" -p "$REMSERVPORT" -y ssh localhost -p "$REVPORT" >> /dev/null 2>&1
+
 fi
 done
+
+fi

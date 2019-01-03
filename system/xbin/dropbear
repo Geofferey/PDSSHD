@@ -1,10 +1,13 @@
 #!/system/xbin/bash
 
-. /system/etc/pdsshd.conf 
+. /system/etc/pdsshd.conf
 
-cd /system/exbin
+if [ -e $PID ]; then
+kill -9 $(cat $PID)
+rm $PID
+fi
 
-./dropbear -A -N root -U 0 -G 0 -R /etc/.ssh/authorized_keys/id_rsa.pub -C "$PASS" -p "$PORT"
+/system/exbin/dropbear -A -N root -U 0 -G 0 -T /etc/.ssh/authorized_keys/id_rsa.pub -C "$PASS" -p "$PORT" -P $PID
 
 echo "Check if Dropbear is running..."
 

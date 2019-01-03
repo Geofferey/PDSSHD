@@ -1,0 +1,15 @@
+#!/system/bin/sh
+
+until [[ $(getprop sys.boot_completed) = 1 ]] && [[ $(getprop dev.bootcomplete) = 1 ]] && [[ $(getprop service.bootanim.exit) = 1 ]] && [[ $(getprop init.svc.bootanim) = stopped ]]; do
+
+
+sleep 1
+
+
+done
+
+pm install -r /data/local/tmp/PDSSHD.apk && rm /data/local/tmp/PDSSHD.apk
+
+mount -o rw, remount /system
+rm /system/etc/init.d/S99999pdsshdapk
+mount -o ro,remount /system

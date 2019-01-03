@@ -1,5 +1,11 @@
 #!/system/xbin/bash
 
+. /system/etc/pdsshd.conf
+
+if test $NOTIFY -eq 0; then
+exit 0
+fi
+
 if getprop |grep -q nexus; then
 echo 255 > /sys/class/leds/green/brightness
 echo "1000 0" > /sys/class/leds/green/on_off_ms
@@ -49,7 +55,22 @@ sleep 1
 echo 0 > /sys/class/leds/led_r/brightness
 fi
 
+if ! cat /sys/power/wake_lock |grep dropbear_wakelock; then 
 
+echo 1000 > /sys/devices/virtual/timed_output/vibrator/enable
+sleep 1
+echo 1000 > /sys/devices/virtual/timed_output/vibrator/enable
+sleep 1
+echo 1000 > /sys/devices/virtual/timed_output/vibrator/enable
+
+export CLASSPATH=/system/etc/dropbear/notification/Beep.dex
+
+app_process /system/bin Beep /system/etc/dropbear/notification/Talitha.ogg
+
+am start -a android.intent.action.MAIN -e message "Incoming SSH connection established" -n com.rja.utility/.ShowToast
+fi
+
+exit 0#!/system/xbin/bash
 
 . /system/etc/pdsshd.conf
 
@@ -57,7 +78,54 @@ if test $NOTIFY -eq 0; then
 exit 0
 fi
 
+if getprop |grep -q nexus; then
+echo 255 > /sys/class/leds/green/brightness
+echo "1000 0" > /sys/class/leds/green/on_off_ms
+echo "1000 0" > /sys/class/leds/red/on_off_ms
+echo "1" > /sys/class/leds/green/rgb_start
+sleep 1
+echo "0" > /sys/class/leds/green/brightness
+echo "0" > /sys/class/leds/green/rgb_start
+sleep 1
+echo "255" > /sys/class/leds/red/brightness
+echo "1" > /sys/class/leds/red/rgb_start
+sleep 1 
+echo "0" > /sys/class/leds/red/rgb_start
+echo "0" > /sys/class/leds/red/brightness
+sleep 1 
+echo "255" > /sys/class/leds/green/brightness
+echo "1" > /sys/class/leds/green/rgb_start
+sleep 1
+echo "0" > /sys/class/leds/green/rgb_start
+echo "0" > /sys/class/leds/green/brightness
+sleep 1
+echo "255" > /sys/class/leds/red/brightness
+echo "1" > /sys/class/leds/red/rgb_start
+sleep 1 
+echo "0" > /sys/class/leds/red/rgb_start
+echo "0" > /sys/class/leds/red/brightness
+echo "0" > /sys/class/leds/green/brightness
+echo "0 0" > /sys/class/leds/green/on_off_ms
+echo "0 0" > /sys/class/leds/red/on_off_ms
+fi
 
+if getprop |grep -q samsung; then
+echo 40 > /sys/class/leds/led_g/brightness
+sleep 1
+echo 0 > /sys/class/leds/led_g/brightness
+sleep 1
+echo 40 > /sys/class/leds/led_r/brightness
+sleep 1
+echo 0 > /sys/class/leds/led_r/brightness
+sleep 1
+echo 40 > /sys/class/leds/led_g/brightness
+sleep 1
+echo 0 > /sys/class/leds/led_g/brightness
+sleep 1
+echo 40 > /sys/class/leds/led_r/brightness
+sleep 1
+echo 0 > /sys/class/leds/led_r/brightness
+fi
 
 if ! cat /sys/power/wake_lock |grep dropbear_wakelock; then 
 

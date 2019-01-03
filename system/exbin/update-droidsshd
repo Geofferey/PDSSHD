@@ -1,0 +1,172 @@
+#!/system/xbin/bash
+
+. /system/etc/pdsshd.conf
+
+if [ -e /data/data/br.com.bott.droidsshd/shared_prefs/br.com.bott.droidsshd_preferences.xml ]; then
+
+UPDATE_APP=$(cat /data/data/br.com.bott.droidsshd/shared_prefs/br.com.bott.droidsshd_preferences.xml |grep update_app |cut -d "=" -f3 |cut -d '"' -f2 |cut -d " " -f 1)
+
+    if [ $UPDATE_APP == true ]; then
+    
+        if [ $SSH -eq 1 ]; then
+        
+            SSH=true
+        else 
+            SSH=false
+        fi
+        
+        if [ $REVSSH -eq 1 ]; then
+        
+            REVSSH=true
+        else 
+            REVSSH=false
+        fi
+        
+        if [ $WAKELOCK -eq 1 ]; then
+        
+            WAKELOCK=true
+        else 
+            WAKELOCK=false
+        fi
+        
+        
+
+echo "<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <string name=\"remote_username\">$REMUSER</string>
+    <boolean name=\"debug\" value=\"false\" />
+    <boolean name=\"forward_on_boot\" value=\"$REVSSH\" />
+    <boolean name=\"prevent_device_sleep\" value=\"false\" />
+    <string name=\"auth_password\">"$PASS"</string>
+    <boolean name=\"stop_on_boot\" value=\"false\" />
+    <string name=\"path_to_sh\">/system/bin/sh</string>
+    <string name=\"remote_server\">$REMSERV</string>
+    <boolean name=\"start_on_boot\" value=\"$SSH\" />
+    <int name=\"dropbear_port\" value=\"$PORT\" />
+    <boolean name=\"notification\" value=\"false\" />
+    <boolean name=\"dropbear_runs_as_root\" value=\"true\" />
+    <boolean name=\"only_if_was_running\" value=\"false\" />
+    <boolean name=\"wifi_lock\" value=\"false\" />
+    <boolean name=\"wakelock_on_connect\" value=\"$WAKELOCK\" />
+    <boolean name=\"dropbear_update_system\" value=\"false\" />
+    <boolean name=\"dropbear_update_app\" value=\"false\" />
+    <int name=\"remote_server_port\" value=\"$REMSERVPORT\" />
+    <int name=\"fwd_remote_port\" value=\"$REVPORT\" />
+    <int name=\"fwd_local_port\" value=\"$PORT\" />
+    <string name=\"path_to_su\">su</string>
+</map>" > /data/data/br.com.bott.droidsshd/shared_prefs/br.com.bott.droidsshd_preferences.xml
+    fi
+fi
+#######################################################
+if [[ -e /data/data/br.com.bott.droidsshd/shared_prefs/br.com.bott.droidsshd_preferences.xml ]]; then
+
+    UPDATE_SYSTEM=$(cat /data/data/br.com.bott.droidsshd/shared_prefs/br.com.bott.droidsshd_preferences.xml |grep update_system |cut -d "=" -f3 |cut -d '"' -f2 |cut -d " " -f 1)
+
+    if [ $UPDATE_SYSTEM == true ]; then
+
+        mount -o rw,remount /system
+
+        CONF=/system/etc/pdsshd.conf
+
+        . $CONF
+
+        UPDATE_APP=$(cat /data/data/br.com.bott.droidsshd/shared_prefs/br.com.bott.droidsshd_preferences.xml |grep update_app |cut -d "=" -f3 |cut -d '"' -f2 |cut -d " " -f 1)
+      
+        SSH=$(cat /data/data/br.com.bott.droidsshd/shared_prefs/br.com.bott.droidsshd_preferences.xml |grep start_on_boot |cut -d "=" -f3 |cut -d '"' -f2 |cut -d " " -f 1)
+
+        if [ $SSH == true ]; then
+
+            SSH=1
+        else
+            SSH=0
+        fi
+
+        if [ ! -z $SSH ]; then
+
+            sed -i -e "s/^SSH=.*/SSH=$SSH/" "$CONF"
+        fi
+
+
+        WAKELOCK=$(cat /data/data/br.com.bott.droidsshd/shared_prefs/br.com.bott.droidsshd_preferences.xml |grep wakelock_on_connect |cut -d "=" -f3 |cut -d '"' -f2 |cut -d " " -f 1)
+
+        if [ $WAKELOCK == true ]; then
+
+            WAKELOCK=1
+        else
+            WAKELOCK=0
+        fi
+
+        if [ ! -z $WAKELOCK ]; then
+
+            sed -i -e "s/^WAKELOCK=.*/WAKELOCK=$WAKELOCK/" "$CONF"
+        fi
+
+
+        REVSSH=$(cat /data/data/br.com.bott.droidsshd/shared_prefs/br.com.bott.droidsshd_preferences.xml |grep forward_on_boot |cut -d "=" -f3 |cut -d '"' -f2 |cut -d " " -f 1)
+
+        if [ $REVSSH == true ]; then
+
+            REVSSH=1
+        else
+            REVSSH=0
+        fi
+        
+        if [ ! -z $REVSSH ]; then
+
+            sed -i -e "s/^REVSSH=.*/REVSSH=$REVSSH/" "$CONF"
+        fi
+
+        PORT=$(cat /data/data/br.com.bott.droidsshd/shared_prefs/br.com.bott.droidsshd_preferences.xml |grep dropbear |grep port |cut -d "=" -f3 |cut -d '"' -f2)
+
+        if [ ! -z $PORT ]; then
+
+            sed -i -e "s/^PORT=.*/PORT=$PORT/" "$CONF"
+
+        fi
+
+        NEW_PASSWD=$(cat /data/data/br.com.bott.droidsshd/shared_prefs/br.com.bott.droidsshd_preferences.xml |grep auth |cut -d ">" -f2 |cut -d "<" -f1)
+
+        if [[ ${NEW_PASSWD} != ${PASS} ]]; then
+
+            sed -i -e "s/^PASS=.*/PASS=$NEW_PASSWD/" "$CONF"
+
+        fi
+
+        REMSERV=$(cat /data/data/br.com.bott.droidsshd/shared_prefs/br.com.bott.droidsshd_preferences.xml |grep remote_server |cut -d ">" -f2 |cut -d "<" -f1)
+
+        if [ ! -z $REMSERV ]; then
+
+            sed -i -e "s/^REMSERV=.*/REMSERV=$REMSERV/" "$CONF"
+
+        fi
+
+        REMSERVPORT=$(cat /data/data/br.com.bott.droidsshd/shared_prefs/br.com.bott.droidsshd_preferences.xml |grep remote_server_port |cut -d "=" -f3 |cut -d '"' -f2)
+
+        if [ ! -z REMSERVPORT ]; then
+
+            sed -i -e "s/^REMSERVPORT=.*/REMSERVPORT=$REMSERVPORT/" "$CONF"
+    
+        fi
+
+        REMUSER=$(cat /data/data/br.com.bott.droidsshd/shared_prefs/br.com.bott.droidsshd_preferences.xml |grep user |cut -d ">" -f2 |cut -d "<" -f1)
+
+        if [ ! -z $REMUSER ]; then
+
+            sed -i -e "s/^REMUSER=.*/REMUSER=$REMUSER/" "$CONF"
+
+        fi
+        
+        REVPORT=$(cat /data/data/br.com.bott.droidsshd/shared_prefs/br.com.bott.droidsshd_preferences.xml |grep fwd_remote_port |cut -d "=" -f3 |cut -d '"' -f2)
+        
+        if [ ! -z $REVPORT ]; then
+        
+        sed -i -e "s/^REVPORT=.*/REVPORT=$REVPORT/" "$CONF"
+        fi
+        
+        
+    sed -i -e "s/^CONFIGURED=.*/CONFIGURED=1/" "$CONF"
+
+mount -o ro,remount /system
+
+    fi
+fi

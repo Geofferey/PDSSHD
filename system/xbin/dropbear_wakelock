@@ -1,56 +1,175 @@
 #!/system/bin/sh
 
-#Dropbear Wakelock Script by:
-#Geofferey@XDA ©2016
+#PDSSHD Wakelock Script by:
+#Geofferey@XDA ©2019 -
+#Free to redistribute & modify
 
 . /system/etc/pdsshd.conf
 
-sleep 10
+if [ -z $DEBUG ]; then
+DEBUG=0
+fi
+
+if [ -e $WLK_PID ]; then
+kill -9 $(cat $WLK_PID) >> /dev/null 2>&1
+rm $WLK_PID
+fi
+
+if [ $WAKELOCK -eq 1 ]; then
+
+echo $$ > $WLK_PID
+
+chmod 0644 $WLK_PID
+
+sleep 5
 
 while true; do
-sleep 3
+sleep 5
 
-if IP=$(getprop dhcp.wlan0.ipaddress) && netstat -n -a |grep "$IP":"$WLKPORT" |grep ESTABLISHED && ! [ -z $IP ]; then
-echo cond0
-sleep 2
-dropbear_notify
-echo "dropbear_wakelock" >> /sys/power/wake_lock
+if IP=$(getprop dhcp.wlan0.ipaddress) && netstat -n -a |grep "$IP":"$PORT" |grep ESTABLISHED >> /dev/null 2>&1 && ! [ -z $IP ]; then
 
-elif netstat -a | grep 127.0.0.1:"$WLKPORT" |grep ESTABLISHED >/dev/null; then
-echo cond1
-sleep 2
-dropbear_notify
-echo "dropbear_wakelock" >> /sys/power/wake_lock
-
-elif IP="$(ifconfig wlan0 | awk '/inet addr/{print substr($2,6)}')" && netstat -n -a |grep $IP:"$WLKPORT"| grep -w ESTABLISHED > /dev/null && ! [ -z $IP ]; then
-echo cond2
-sleep 2
-dropbear_notify
-echo "dropbear_wakelock" >> /sys/power/wake_lock
-
-elif IP="$(ip route get 8.8.8.8 | awk '{ print $NF; exit }')" &&
-netstat -a | grep $IP:"$WLKPORT" |grep ESTABLISHED >/dev/null && ! [ -z $IP ]; then
-echo cond3
-sleep 2
-dropbear_notify
-echo "dropbear_wakelock" >> /sys/power/wake_lock
-
-elif netstat -a |grep -w localhost:ssh |grep -w ESTABLISHED >dev/null || netstat -a |grep -w localhost:"$WLKPORT" |grep -w ESTABLISHED >dev/null; then
-echo cond4
-sleep 2
-dropbear_notify
-echo "dropbear_wakelock" >> /sys/power/wake_lock
-
-elif netstat -a | grep 0.0.0.0:"$WLKPORT" |grep LISTEN >/dev/null; then
-echo cond5
-sleep 2
-echo "dropbear_wakelock" >> /sys/power/wake_unlock
-
-elif netstat -a |grep -w localhost:ssh |grep -w TIME_WAIT >/dev/null; then 
-echo cond6
-sleep 2
-echo "dropbear_wakelock" >> /sys/power/wake_unlock
-else
-sleep 2
+if [ $DEBUG == 1 ]; then
+echo "Condition 0 Wake Lock $COUNT"
 fi
+
+sleep 1
+COUNT=0
+dropbear_notify
+echo "dropbear_wakelock" >> /sys/power/wake_lock
+
+elif netstat -ant |grep 127.0.0.1:"$PORT" |grep -q ESTABLISHED >> /dev/null 2>&1; then
+if [ $DEBUG == 1 ]; then
+echo "Condition 1 WakeLock $COUNT"
+fi
+
+sleep 1
+COUNT=0
+dropbear_notify
+echo "dropbear_wakelock" >> /sys/power/wake_lock
+
+elif netstat -at |grep -w "localhost:$PORT" |grep -q ESTABLISHED >> /dev/null 2>&1; then
+
+if [ $DEBUG == 1 ]; then
+echo "Condition 2 Wake Lock $COUNT"
+fi
+
+#sleep 2
+COUNT=0
+dropbear_notify
+echo "dropbear_wakelock" >> /sys/power/wake_lock
+
+elif IP="$(ifconfig wlan0 |grep -w inet |cut -d ":" -f2 |cut -d " " -f 1)" && netstat -n -a -t |grep $IP:$PORT|grep ESTABLISHED >> /dev/null 2>&1 && ! [ -z $IP ]; then
+if [ $DEBUG == 1 ]; then
+echo "Condition 3 Wake Lock $COUNT"
+fi
+
+COUNT=0
+sleep 2
+dropbear_notify
+echo "dropbear_wakelock" >> /sys/power/wake_lock
+
+elif IP="$(ip route get 8.8.8.8 |cut -d " " -f 11)" &&
+netstat -ant | grep -q $IP:"$PORT" |grep ESTABLISHED >> /dev/null 2>&1; then
+
+if [ $DEBUG == 1 ]; then
+echo "Condition 4 Wake Lock $COUNT"
+fi
+
+COUNT=0
+sleep 2
+dropbear_notify
+echo "dropbear_wakelock" >> /sys/power/wake_lock
+
+elif netstat -a |grep -q -w "localhost:ssh" |grep -q -w ESTABLISHED >> /dev/null 2>&1 || netstat -at |grep -q -w localhost:"$PORT" |grep -w -q ESTABLISHED >> /dev/null 2>&1; then
+
+if [ $DEBUG == 1 ]; then
+echo "Condition 5 Wake Lock $COUNT"
+fi
+
+COUNT=0
+#sleep 2
+dropbear_notify
+echo "dropbear_wakelock" >> /sys/power/wake_lock
+
+elif netstat -ant | grep 0.0.0.0:"$PORT" |grep -q TIME_WAIT >> /dev/null 2>&1; then
+
+if [ $DEBUG == 1 ]; then
+echo "Condition 6 Wake Unlock $COUNT"
+fi
+sleep 1
+COUNT=$((COUNT+1))
+
+elif netstat -at | grep 127.0.0.1:ssh |grep LISTEN >> /dev/null 2>&1; then
+
+if [ $DEBUG == 1 ]; then
+echo "Condition 7 Wake Unlock $COUNT"
+fi
+
+sleep 1
+COUNT=$((COUNT+1))
+
+elif netstat -at | grep localhost:ssh |grep LISTEN >> /dev/null 2>&1; then
+
+if [ $DEBUG == 1 ]; then
+echo "Condition 8 Wake Unlock $COUNT"
+fi
+
+sleep 1
+COUNT=$((COUNT+1))
+
+elif netstat -ant | grep 127.0.0.1:"$PORT" |grep LISTEN >> /dev/null 2>&1; then
+
+if [ $DEBUG == 1 ]; then
+echo "Condition 9 Wake Unlock $COUNT"
+fi
+
+sleep q
+COUNT=$((COUNT+1))
+
+elif netstat -at |grep -w localhost:"$PORT" |grep -q -w TIME_WAIT >> /dev/null 2>&1; then
+
+if [ $DEBUG == 1 ]; then
+echo "Condition 10 Wake Unlock $COUNT"
+fi
+
+sleep 1
+COUNT=$((COUNT+1))
+#else
+#sleep 2
+
+elif netstat -at | grep -w localhost:ssh |grep -w TIME_WAIT >> /dev/null 2>&1; then
+
+if [ $DEBUG == 1 ]; then
+echo "Condition 11 Wake Unlock $COUNT"
+fi
+
+sleep 1
+COUNT=$((COUNT+1))
+
+elif ! netstat -ant |grep 127.0.0.1:"$PORT" |grep -q ESTABLISHED >> /dev/null 2>&1; then
+
+if [ $DEBUG == 1 ]; then
+echo "Condition 12 Wake Unlock $COUNT"
+fi
+
+sleep 1
+COUNT=$((COUNT+1))
+
+else 
+COUNT=$((COUNT+1))
+
+fi
+
+if [ $COUNT -eq 2 ]; then
+
+echo "dropbear_wakelock" >> /sys/power/wake_unlock
+
+if [ $DEBUG == 1 ]; then
+echo "Wake Unlock"
+fi
+
+fi
+
 done
+
+fi

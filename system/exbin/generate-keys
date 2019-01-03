@@ -1,0 +1,27 @@
+#!/system/bin/sh
+
+. /system/etc/pdsshd.conf
+
+mount -o rw,remount /system
+
+if [ ! -e $RSA_HOSTKEY ]; then
+
+dropbearkey -t rsa -f $RSA_HOSTKEY
+
+chmod 0400 $RSA_HOSTKEY
+
+chcon u:object_r:apk_data_file:s0 $RSA_HOSTKEY
+
+fi
+
+if [ ! -e $DSS_HOSTKEY ]; then
+
+dropbearkey -t dss -f $DSS_HOSTKEY
+
+chmod 0400 $DSS_HOSTKEY
+
+chcon u:object_r:apk_data_file:s0 $DSS_HOSTKEY
+
+fi
+
+mount -o ro,remount /system

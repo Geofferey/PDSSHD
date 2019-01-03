@@ -1,0 +1,16 @@
+#/system/bin/sh
+
+. /system/etc/pdsshd.conf
+
+INPUT_KEY=$*
+
+mount -o rw,remount /system
+
+if ! dropbearconvert openssh dropbear $INPUT_KEY $KEYFILE;
+then
+dropbearconvert dropbear openssh $INPUT_KEY $KEYFILE
+fi
+
+chmod 0400 $KEYFILE
+
+mount -o ro,remount /system
