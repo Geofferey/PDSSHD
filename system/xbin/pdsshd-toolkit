@@ -1,14 +1,15 @@
 #!/system/xbin/bash
 
 #Written by:
-#Geofferey@XDA ©2016
+#Geofferey@XDA ©2019
+#Free to modify and redistribute
 
 CONF=/system/etc/pdsshd.conf
 
 . "$CONF"
 
 clear
-echo "PDSSHD v2.08 by:"
+echo "PDSSHD v3.0.0 by:"
 echo "Geofferey@XDA forums"
 sleep 2
 

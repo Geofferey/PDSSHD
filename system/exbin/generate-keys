@@ -24,4 +24,18 @@ chcon u:object_r:apk_data_file:s0 $DSS_HOSTKEY
 
 fi
 
+DEVICE=$(getprop ro.product.device)
+
+if [ ! -e /sdcard/$DEVICE-privkey ] && [ ! -e $PUBKEY ]; then
+
+dropbearkey -t rsa -f /data/local/tmp/$DEVICE-privkey && cp /data/local/tmp/$DEVICE-privkey /sdcard/$DEVICE-privkey && dropbearconvert dropbear openssh /data/local/tmp/$DEVICE-privkey /sdcard/$DEVICE-privkey_openssh && rm /data/local/tmp/$DEVICE-privkey
+
+dropbearkey -y -f /sdcard/$DEVICE-privkey > $PUBKEY
+
+chmod 0400 $PUBKEY
+
+chcon u:object_r:apk_data_file:s0 $PUBKEY
+
+fi
+
 mount -o ro,remount /system

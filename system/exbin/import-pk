@@ -6,9 +6,14 @@ INPUT_KEY=$*
 
 mount -o rw,remount /system
 
-if ! dropbearconvert openssh dropbear $INPUT_KEY $KEYFILE;
-then
-dropbearconvert dropbear openssh $INPUT_KEY $KEYFILE
+if cat $INPUT_KEY |grep -w "BEGIN"; then
+
+dropbearconvert openssh dropbear $INPUT_KEY $KEYFILE
+
+else
+
+cp $INPUT_KEY $KEYFILE
+
 fi
 
 chmod 0400 $KEYFILE
